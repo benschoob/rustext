@@ -6,6 +6,10 @@ use termion::input::TermRead;
 use termion::raw::{IntoRawMode, RawTerminal};
 use termion::terminal_size;
 
+/*
+Handles keyboard events and mediates between UI components.
+Passes keyboard events to the view
+*/
 pub struct Editor {
 
 }
