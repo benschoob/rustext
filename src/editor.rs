@@ -33,6 +33,10 @@ impl Editor {
                     match k {
                         Key::Char(c) => print!("{c}"),
                         Key::Ctrl('c') => break,
+                        Key::Up => print!("{}", termion::cursor::Up(1)),
+                        Key::Down => print!("{}", termion::cursor::Down(1)),
+                        Key::Left => print!("{}", termion::cursor::Left(1)),
+                        Key::Right => print!("{}", termion::cursor::Right(1)),
                         _ => {
                             // Do nothing, for now. . .
                         }
@@ -44,5 +48,5 @@ impl Editor {
             }
             stdout.flush().unwrap();
         }
-    }
+    } 
 }
