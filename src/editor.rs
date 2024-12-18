@@ -1,9 +1,10 @@
 extern crate termion;
 
-use std::io::{stdin, stdout, Write};
+use std::io::{stdin, stdout, Stdout, Write};
 use termion::event::Key;
 use termion::input::TermRead;
-use termion::raw::IntoRawMode;
+use termion::raw::{IntoRawMode, RawTerminal};
+use termion::terminal_size;
 
 pub struct Editor {
 
@@ -14,6 +15,18 @@ impl Editor {
         Editor{}
     }
 
+    fn print_empty_file(stdout: &mut RawTerminal<Stdout>) {
+        write!(
+            stdout,
+            "{}",
+            termion::cursor::Goto(1, 1)
+        ).unwrap();
+        for _ in 0..terminal_size().unwrap().1 {
+            print!("~\n");
+        }
+        stdout.flush().unwrap();
+    } 
+
     pub fn run(&self) {
         // Put the terminal into raw mode
         let stdin = stdin();
@@ -21,11 +34,14 @@ impl Editor {
 
         // Clear the screen
         write!(
-            stdout, "{}{}", 
+            stdout, 
+            "{}{}", 
             termion::clear::All,
             termion::cursor::Goto(1, 1)
         ).unwrap();
         stdout.flush().unwrap();
+
+        Editor::print_empty_file(&mut stdout);
 
         for key in stdin.keys() {
             match key.as_ref() {
@@ -49,5 +65,5 @@ impl Editor {
             }
             stdout.flush().unwrap();
         }
-    } 
+    }
 }
