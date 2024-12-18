@@ -6,5 +6,9 @@ pub struct Buffer {
 }
 
 impl Buffer {
-
+    pub fn new() -> Self {
+        Buffer {
+            buf: Vec::new(),
+        }
+    }
 }

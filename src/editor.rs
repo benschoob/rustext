@@ -1,10 +1,11 @@
-extern crate termion;
-
 use std::io::{stdin, stdout, Stdout, Write};
 use termion::event::Key;
 use termion::input::TermRead;
 use termion::raw::{IntoRawMode, RawTerminal};
 use termion::terminal_size;
+
+use crate::view::{View, TextEvent};
+use crate::buffer::Buffer;
 
 /*
 Handles keyboard events and mediates between UI components.
@@ -42,7 +43,7 @@ impl Editor {
         stdout.flush().unwrap();
     } 
 
-    pub fn run(&self) {
+    pub fn run(&self, view: View, buffer: Buffer) {
         // Put the terminal into raw mode
         let stdin = stdin();
         let mut stdout = stdout().into_raw_mode().unwrap();
@@ -58,16 +59,17 @@ impl Editor {
 
         Editor::print_empty_file(&mut stdout);
 
+        // Read keyboard events
         for key in stdin.keys() {
             match key.as_ref() {
                 Ok(k) => {
                     match k {
-                        Key::Char(c) => print!("{c}"),
+                        Key::Char(c) => view.handle_text_event(TextEvent::Char(*c)),
                         Key::Ctrl('c') => break,
-                        Key::Up => print!("{}", termion::cursor::Up(1)),
-                        Key::Down => print!("{}", termion::cursor::Down(1)),
-                        Key::Left => print!("{}", termion::cursor::Left(1)),
-                        Key::Right => print!("{}", termion::cursor::Right(1)),
+                        Key::Up => view.handle_text_event(TextEvent::Up),
+                        Key::Down => view.handle_text_event(TextEvent::Down),
+                        Key::Left => view.handle_text_event(TextEvent::Left),
+                        Key::Right => view.handle_text_event(TextEvent::Right),
                         // Key::Backspace => print!("{} {}", termion::cursor::Left(1), termion::cursor::Left(1)),
                         _ => {
                             // Do nothing, for now. . .
