@@ -37,6 +37,7 @@ impl Editor {
                         Key::Down => print!("{}", termion::cursor::Down(1)),
                         Key::Left => print!("{}", termion::cursor::Left(1)),
                         Key::Right => print!("{}", termion::cursor::Right(1)),
+                        Key::Backspace => print!("{} {}", termion::cursor::Left(1), termion::cursor::Left(1)),
                         _ => {
                             // Do nothing, for now. . .
                         }
