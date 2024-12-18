@@ -16,14 +16,25 @@ impl Editor {
     }
 
     fn print_empty_file(stdout: &mut RawTerminal<Stdout>) {
+        // Print tildes
         write!(
             stdout,
             "{}",
             termion::cursor::Goto(1, 1)
         ).unwrap();
-        for _ in 0..terminal_size().unwrap().1 {
-            print!("~\n");
+        for _ in 0..=terminal_size().unwrap().1 {
+            print!("~\r\n");
         }
+
+        // Print version info
+        let version: &str = "Rustext v0.1";
+        write!(
+            stdout,
+            "{}{}{}",
+            termion::cursor::Goto(terminal_size().unwrap().0 / 2 - (version.len() as u16) / 2, terminal_size().unwrap().1 / 2),
+            version,
+            termion::cursor::Goto(1, 1)
+        ).unwrap();
         stdout.flush().unwrap();
     } 
 
@@ -53,7 +64,7 @@ impl Editor {
                         Key::Down => print!("{}", termion::cursor::Down(1)),
                         Key::Left => print!("{}", termion::cursor::Left(1)),
                         Key::Right => print!("{}", termion::cursor::Right(1)),
-                        Key::Backspace => print!("{} {}", termion::cursor::Left(1), termion::cursor::Left(1)),
+                        // Key::Backspace => print!("{} {}", termion::cursor::Left(1), termion::cursor::Left(1)),
                         _ => {
                             // Do nothing, for now. . .
                         }
